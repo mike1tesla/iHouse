@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "567061341737",
+    "project_id": "mike-spotify",
+    "storage_bucket": "mike-spotify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567061341737:android:680f536c4146cf283dde38",
+        "android_client_info": {
+          "package_name": "com.miketesla.smart_iot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOizcI807hHxkY1xmpswJ-X2m7pNlsCJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
