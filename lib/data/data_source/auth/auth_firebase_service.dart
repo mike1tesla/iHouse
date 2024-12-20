@@ -38,7 +38,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       } else if (e.code == 'email-already-in-use'){
         message = "The account already exists for that email";
       } else if (e.code == "invalid-credential") {
-        message = "Wrong password provider for that user";
+        message = "The supplied auth credential is malformed or has expired.";
       }
       return Left(message);
     }

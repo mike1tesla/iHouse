@@ -47,28 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDKAzdi9YtnMmqYV6Hc-KtFmcvhFZmfxak',
-    appId: '1:567061341737:web:7524540b3356c3df3dde38',
-    messagingSenderId: '567061341737',
-    projectId: 'mike-spotify',
-    authDomain: 'mike-spotify.firebaseapp.com',
-    storageBucket: 'mike-spotify.appspot.com',
+    apiKey: 'AIzaSyAnNSTc2BojoaYHYOMnxypvZZoaWQ0OI80',
+    appId: '1:466599615724:web:17ff0792d3a3753c6f59c9',
+    messagingSenderId: '466599615724',
+    projectId: 'flutter-iot-fffd8',
+    authDomain: 'flutter-iot-fffd8.firebaseapp.com',
+    databaseURL: 'https://flutter-iot-fffd8-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-iot-fffd8.firebasestorage.app',
+    measurementId: 'G-VXTPRWXBQ9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDOizcI807hHxkY1xmpswJ-X2m7pNlsCJ0',
-    appId: '1:567061341737:android:680f536c4146cf283dde38',
-    messagingSenderId: '567061341737',
-    projectId: 'mike-spotify',
-    storageBucket: 'mike-spotify.appspot.com',
+    apiKey: 'AIzaSyBiEGvNAqDO62GmbuS7U2DD-dng63Xm0Sk',
+    appId: '1:466599615724:android:e2d3d5493486cfb86f59c9',
+    messagingSenderId: '466599615724',
+    projectId: 'flutter-iot-fffd8',
+    databaseURL: 'https://flutter-iot-fffd8-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-iot-fffd8.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBnVJldPuHYBZRkgjnWkxD2EeJopFiYsYo',
-    appId: '1:567061341737:ios:654cde1b3c7952763dde38',
-    messagingSenderId: '567061341737',
-    projectId: 'mike-spotify',
-    storageBucket: 'mike-spotify.appspot.com',
+    apiKey: 'AIzaSyA8Qm1-LHeq7ZR7VP-iLZsrw9FZwWPzhC8',
+    appId: '1:466599615724:ios:9653f1c7c6642af26f59c9',
+    messagingSenderId: '466599615724',
+    projectId: 'flutter-iot-fffd8',
+    databaseURL: 'https://flutter-iot-fffd8-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-iot-fffd8.firebasestorage.app',
     iosBundleId: 'com.miketesla.smartIot',
   );
 

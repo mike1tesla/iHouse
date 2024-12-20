@@ -1,13 +1,33 @@
 {
   "project_info": {
-    "project_number": "567061341737",
-    "project_id": "mike-spotify",
-    "storage_bucket": "mike-spotify.appspot.com"
+    "project_number": "466599615724",
+    "firebase_url": "https://flutter-iot-fffd8-default-rtdb.firebaseio.com",
+    "project_id": "flutter-iot-fffd8",
+    "storage_bucket": "flutter-iot-fffd8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:567061341737:android:680f536c4146cf283dde38",
+        "mobilesdk_app_id": "1:466599615724:android:cbd22a9e9b2bd6536f59c9",
+        "android_client_info": {
+          "package_name": "com.m1ketesla.iot_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiEGvNAqDO62GmbuS7U2DD-dng63Xm0Sk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466599615724:android:e2d3d5493486cfb86f59c9",
         "android_client_info": {
           "package_name": "com.miketesla.smart_iot"
         }
@@ -15,7 +35,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDOizcI807hHxkY1xmpswJ-X2m7pNlsCJ0"
+          "current_key": "AIzaSyBiEGvNAqDO62GmbuS7U2DD-dng63Xm0Sk"
         }
       ],
       "services": {
