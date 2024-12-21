@@ -17,9 +17,14 @@
 #define FIREBASE_PROJECT_ID "flutter-iot-fffd8"
 
 #define DHT_SENSOR_PIN 13
+#define DHT11_SENSOR_PIN 33
 #define DHT_SENSOR_TYPE DHT22
+#define DHT11_SENSOR_TYPE DHT11
+
 #define LED1_PIN 12
 #define LED2_PIN 14
+#define LED_AIR_PIN 32
+
 #define LDR_PIN 36
 #define PWMChanel 0
 
@@ -54,10 +59,12 @@ bool unlockState = false;
 
 //Home
 DHT dht_sensor(DHT_SENSOR_PIN, DHT_SENSOR_TYPE);
+DHT dht11_sensor(DHT11_SENSOR_PIN, DHT11_SENSOR_TYPE);
+
 const int freq = 5000;     // tan so 5000
 const int resolution = 8;  // do phan giai 8bit 0->255
 
-FirebaseData fbdo, fbdo_s1, fbdo_s2, fbdo_s3;  // tao luong stream cho led_digital va analog
+FirebaseData fbdo, fbdo_s1, fbdo_s2, fbdo_s3, fbdo_s4;  // tao luong stream cho led_digital va analog
 FirebaseAuth auth;
 FirebaseConfig config;
 
@@ -65,10 +72,16 @@ unsigned long sendDataPrevMillis = 0;
 bool signupOK = false;
 int ldrData = 0;
 float voltage = 0.0;
+
 int pwmValue = 0;
 bool ledStatus = false;
+bool ledAirStatus = false;
+
 float humi = 0;
+float humi11 = 0;
 float temp = 0;
+float temp11 = 0;
+
 // Dữ liệu điều khiển
 int brightness = 0;                // Độ sáng (0-255)
 int numLeds = 0;                   // Số lượng LED
@@ -87,9 +100,13 @@ void setup() {
 
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(DHT_SENSOR_PIN, INPUT);
+  pinMode(DHT11_SENSOR_PIN, INPUT);
   dht_sensor.begin();
+  dht11_sensor.begin();
+
   pinMode(LDR_PIN, INPUT);
   pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED_AIR_PIN, OUTPUT);
   ledcAttachChannel(LED1_PIN, freq, resolution, PWMChanel);
 
   Serial.begin(115200);
@@ -120,13 +137,13 @@ void setup() {
   if (!Firebase.RTDB.beginStream(&fbdo_s1, "/Led/analog")) Serial.printf("Stream 1 begin error, %s\n\n", fbdo_s1.errorReason().c_str());
   if (!Firebase.RTDB.beginStream(&fbdo_s2, "/Led/digital")) Serial.printf("Stream 2 begin error, %s\n\n", fbdo_s2.errorReason().c_str());
   if (!Firebase.RTDB.beginStream(&fbdo_s3, "/RGB")) Serial.printf("Stream 3 begin error, %s\n\n", fbdo_s3.errorReason().c_str());
+  if (!Firebase.RTDB.beginStream(&fbdo_s4, "/Led/air")) Serial.printf("Stream 4 begin error, %s\n\n", fbdo_s4.errorReason().c_str());
 
   // Khởi tạo LED strip RGB
   setupStrip();
   strip.begin();
   strip.show();  // Bắt đầu với trạng thái tắt
 }
-
 
 void loop() {
   if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
@@ -135,13 +152,13 @@ void loop() {
     // Đọc dữ liệu từ cảm biến
     humi = dht_sensor.readHumidity();
     temp = dht_sensor.readTemperature();
+    humi11 = dht11_sensor.readHumidity();
+    temp11 = dht11_sensor.readTemperature();
     ldrData = analogRead(LDR_PIN);
     voltage = (float)analogReadMilliVolts(LDR_PIN) / 1000;  // convert miliVolt to Volt
 
     // Lưu dữ liệu vào Realtime Database
-    sendDataDHT();
-    sendDataLightSensor();
-    readRGBOnChange();
+    sendData();
   }
 
   //----READ data from a RTDB onDataChange-----
@@ -149,46 +166,47 @@ void loop() {
   sendRFID();
 }
 
-
-void sendDataDHT() {
-  if (isnan(humi) || isnan(temp)) {
-
-    Serial.println("Failed to read from DHT sensor!");
-  } else {
-    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT/humi", humi)) {
-      Serial.println();
-      Serial.print(humi);
-      Serial.print(" ==> successful saved to: " + fbdo.dataPath());
-      Serial.println(" (" + fbdo.dataType() + ") ");
-    } else {
-      Serial.println("FAILED: " + fbdo.errorReason());
-    }
-
-    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT/temp", temp)) {
-      Serial.print(temp);
-      Serial.print(" ==> successful saved to: " + fbdo.dataPath());
-      Serial.println(" (" + fbdo.dataType() + ") ");
-    } else {
-      Serial.println("FAILED: " + fbdo.errorReason());
-    }
-  }
-}
-
-void sendDataLightSensor() {
+void sendData() {
   if (Firebase.RTDB.setInt(&fbdo, "Sensor/light_sensor/ldr_data", ldrData)) {
-    Serial.print(ldrData);
-    Serial.print(" ==> successful saved to: " + fbdo.dataPath());
-    Serial.println(" (" + fbdo.dataType() + ") ");
+    Serial.println("ldrData: " + String(ldrData));
   } else {
     Serial.println("FAILED: " + fbdo.errorReason());
   }
 
   if (Firebase.RTDB.setFloat(&fbdo, "Sensor/light_sensor/voltage", voltage)) {
-    Serial.print(voltage);
-    Serial.print(" ==> successful saved to: " + fbdo.dataPath());
-    Serial.println(" (" + fbdo.dataType() + ") ");
+    Serial.println("voltage: " + String(voltage));
   } else {
     Serial.println("FAILED: " + fbdo.errorReason());
+  }
+
+  if (isnan(humi) || isnan(temp) || isnan(humi11) || isnan(temp11)) {
+
+    Serial.println("Failed to read from DHT sensor!");
+  } else {
+    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT/humi", humi)) {
+      Serial.println();
+      Serial.println("DHT22 Humi: " + String(humi));
+    } else {
+      Serial.println("FAILED: " + fbdo.errorReason());
+    }
+
+    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT/temp", temp)) {
+      Serial.println("DHT22 Temp: " + String(temp));
+    } else {
+      Serial.println("FAILED: " + fbdo.errorReason());
+    }
+
+    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT11/humi", humi11)) {
+      Serial.println("DHT11 Humi: " + String(humi11));
+    } else {
+      Serial.println("FAILED: " + fbdo.errorReason());
+    }
+
+    if (Firebase.RTDB.setFloat(&fbdo, "Sensor/DHT11/temp", temp11)) {
+      Serial.println("DHT11 Temp: " + String(temp11));
+    } else {
+      Serial.println("FAILED: " + fbdo.errorReason());
+    }
   }
 }
 
@@ -199,33 +217,38 @@ void readDataOnChange() {
     if (fbdo_s1.streamAvailable()) {
       if (fbdo_s1.dataType() == "int") {
         pwmValue = fbdo_s1.intData();
-        Serial.println("Successful READ from " + fbdo_s1.dataPath() + ": " + pwmValue + " {" + fbdo_s1.dataType() + "} ");
+        Serial.println("LED Analog: " + String(pwmValue));
         ledcWrite(LED1_PIN, pwmValue);
       }
     }
 
-    if (!Firebase.RTDB.readStream(&fbdo_s2)) Serial.printf("Stream 1 READ error, %s\n\n", fbdo_s2.errorReason().c_str());
+    if (!Firebase.RTDB.readStream(&fbdo_s2)) Serial.printf("Stream 2 READ error, %s\n\n", fbdo_s2.errorReason().c_str());
     if (fbdo_s2.streamAvailable()) {
       if (fbdo_s2.dataType() == "boolean") {
         ledStatus = fbdo_s2.boolData();
-        Serial.println("Successful READ from " + fbdo_s2.dataPath() + ": " + ledStatus + " {" + fbdo_s2.dataType() + "} ");
+        Serial.println("LED Digital: " + String(ledStatus));
         digitalWrite(LED2_PIN, ledStatus);
       }
     }
-  }
-}
 
-void readRGBOnChange() {
-  if (Firebase.ready()) {
-    //----READ data from a RTDB onDataChange-----
     if (!Firebase.RTDB.readStream(&fbdo_s3)) Serial.printf("Stream 3 READ error, %s\n\n", fbdo_s3.errorReason().c_str());
     if (fbdo_s3.streamAvailable()) {
       Serial.println("Stream 3 RGB data received:");
       // Khi bất kỳ trường nào thay đổi, đọc lại toàn bộ dữ liệu từ Firebase
       setupStrip();
     }
+
+    if (!Firebase.RTDB.readStream(&fbdo_s4)) Serial.printf("Stream 4 READ error, %s\n\n", fbdo_s4.errorReason().c_str());
+    if (fbdo_s4.streamAvailable()) {
+      if (fbdo_s4.dataType() == "boolean") {
+        ledAirStatus = fbdo_s4.boolData();
+        Serial.println("LED Air: " + String(ledAirStatus));
+        digitalWrite(LED_AIR_PIN, ledAirStatus);
+      }
+    }
   }
 }
+
 
 void sendRFID() {
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
@@ -267,6 +290,11 @@ void sendRFID() {
     sg90.write(0);
 
   } else {
+    userId = "";
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      userId += String(rfid.uid.uidByte[i], HEX);
+    }
+    userId.toUpperCase();
     Serial.println(F("Can't open the door"));
     digitalWrite(BUZZER_PIN, HIGH);
     delay(1000);

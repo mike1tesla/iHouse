@@ -22,9 +22,8 @@ class HousePage extends StatefulWidget {
 }
 
 class _HousePageState extends State<HousePage> {
-  double humi = 24.1, temp = 62.3;
-  List<double> listTemp = [24.1, 24.3, 24.4, 24.0, 23.9, 24.5, 24.3],
-      listHumi = [64.1, 64.4, 64.3, 64.4, 63.8, 64.7, 64.4];
+  double humi = 0, temp = 0;
+  List<double> listTemp = [], listHumi = [];
   final Lockdoor lockdoor = const Lockdoor(tags: "A29AF621", unlockTime: "2024-12-13 00:14:56", unlockState: true);
 
   @override
