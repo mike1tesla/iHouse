@@ -1,51 +1,53 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_iot/common/widgets/appbar/app_bar.dart';
-import 'package:smart_iot/common/widgets/button/basic_app_button.dart';
+import 'package:smart_iot/presentation/living_room/bloc/set_led_living_cubit.dart';
 
-class LivingRoomPage extends StatefulWidget {
+class LivingRoomPage extends StatelessWidget {
   const LivingRoomPage({super.key});
 
   @override
-  State<LivingRoomPage> createState() => _LivingRoomPageState();
-}
-
-class _LivingRoomPageState extends State<LivingRoomPage> {
-  bool isSwitched = false;
-  double brightness = 0;
-  double numbersLed = 0;
-  double red = 0;
-  double green = 0;
-  double blue = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: BasicAppBar(
-        backgroundColor: Colors.green.shade100,
-        title: const Text(
-          "Living Room",
-          style: TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 25,
-            color: Colors.green,
+    return BlocProvider(
+      create: (context) => SetLedLivingCubit(),
+      child: Scaffold(
+        appBar: BasicAppBar(
+          backgroundColor: Colors.green.shade100,
+          title: const Text(
+            "Living Room",
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 25,
+              color: Colors.green,
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [_buildLedDigital(), const SizedBox(height: 30), _buildLedRGBControl()],
-          ),
+        body: Builder(
+          builder: (context) {
+            return BlocBuilder<SetLedLivingCubit, SetLedLivingState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildLedDigital(state, context),
+                        const SizedBox(height: 30),
+                        _buildLedRGBControl(state, context),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildLedDigital() {
+  Widget _buildLedDigital(SetLedLivingState state, BuildContext context) {
     return Container(
       height: 80,
       width: double.infinity,
@@ -71,14 +73,12 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
           Expanded(
             child: SwitchListTile(
               title: Text(
-                isSwitched ? 'ON' : 'OFF',
+                state.isSwitched ? 'ON' : 'OFF',
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
-              value: isSwitched,
+              value: state.isSwitched,
               onChanged: (bool value) {
-                setState(() {
-                  isSwitched = value;
-                });
+                context.read<SetLedLivingCubit>().setDataLedDigital(digital: value);
               },
               activeTrackColor: Colors.green,
               // Màu của track khi ON
@@ -94,7 +94,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
     );
   }
 
-  Widget _buildLedRGBControl() {
+  Widget _buildLedRGBControl(SetLedLivingState state, BuildContext context) {
     return Container(
       height: 550,
       width: double.infinity,
@@ -113,72 +113,55 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
           const Text("Led RGB Control", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
           setupValueSlider(
             title: "Brightness",
-            currentValue: brightness,
+            currentValue: state.brightness,
             max: 100,
             divisions: 100,
             activeColor: Colors.deepPurple,
-            onChanged: (double value) {
-              setState(() {
-                brightness = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
+            onChanged: (double value) => context.read<SetLedLivingCubit>().updateBrightness(value),
           ),
           setupValueSlider(
             title: "Numbers Led",
-            currentValue: numbersLed,
+            currentValue: state.numbersLed,
             divisions: 8,
             max: 8,
             activeColor: Colors.deepPurple,
-            onChanged: (double value) {
-              setState(() {
-                numbersLed = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
+            onChanged: (double value) => context.read<SetLedLivingCubit>().updateNumbersLed(value),
           ),
           setupValueSlider(
             title: "Red Color",
-            currentValue: red,
+            currentValue: state.red,
             divisions: 255,
             max: 255,
             activeColor: Colors.red,
-            onChanged: (double value) {
-              setState(() {
-                red = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
+            onChanged: (double value) => context.read<SetLedLivingCubit>().updateColors(red: value),
           ),
           setupValueSlider(
             title: "Green Color",
-            currentValue: green,
+            currentValue: state.green,
             divisions: 255,
             max: 255,
             activeColor: Colors.green,
-            onChanged: (double value) {
-              setState(() {
-                green = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
+            onChanged: (double value) => context.read<SetLedLivingCubit>().updateColors(green: value),
           ),
           setupValueSlider(
             title: "Red Color",
-            currentValue: blue,
+            currentValue: state.blue,
             divisions: 255,
             max: 255,
             activeColor: Colors.blue,
-            onChanged: (double value) {
-              setState(() {
-                blue = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
+            onChanged: (double value) => context.read<SetLedLivingCubit>().updateColors(blue: value),
+
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+              },
               style: ElevatedButton.styleFrom(
-                  minimumSize: Size.fromHeight(50!),
+                minimumSize: const Size.fromHeight(50),
               ),
-              child: const Text("SET Led RGB",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+              child: const Text("SET Led RGB",
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
             ),
           )
         ],

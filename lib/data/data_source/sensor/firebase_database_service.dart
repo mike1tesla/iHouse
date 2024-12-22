@@ -2,20 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import '../../models/sensor/DHT.dart';
 
-class FirebaseDatabaseService {
-  Future<void> setDataLedAnalog(double analog) async {
-    DatabaseReference ledRef = FirebaseDatabase.instance.ref("Led");
-    await ledRef.update({
-      "analog": analog,
-    });
-  }
-
-  Future<void> setDataLedDigital(bool digital) async {
-    DatabaseReference ledRef = FirebaseDatabase.instance.ref("Led");
-    await ledRef.update({
-      "digital": digital,
-    });
-  }
+class SensorFirebaseDatabaseService {
 
   Future<void> getDataSensor() async {
     DatabaseReference sensorRef = FirebaseDatabase.instance.ref('Sensor');
