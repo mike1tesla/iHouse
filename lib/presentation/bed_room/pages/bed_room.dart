@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_iot/common/widgets/appbar/app_bar.dart';
+import 'package:smart_iot/presentation/bed_room/bloc/bed_room_cubit.dart';
 
 import '../../../common/widgets/my_sensor_card/my_sensor_card.dart';
 import '../../../data/models/sensor/DHT.dart';
@@ -16,12 +16,10 @@ class BedRoomPage extends StatefulWidget {
 }
 
 class _BedRoomPageState extends State<BedRoomPage> {
-  double humi = 24.1, temp = 62.3;
-  List<double> listTemp = [24.1, 24.3, 24.4, 24.0, 23.9, 24.5, 24.3],
-      listHumi = [64.1, 64.4, 64.3, 64.4, 63.8, 64.7, 64.4];
+  double humi = 0, temp = 0;
+  List<double> listTemp = [], listHumi = [];
   LDR lightSensor = const LDR(ldrData: 3700, voltage: 2.978);
-  bool isSwitched = false;
-  double _currentValue = 50;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,29 +34,35 @@ class _BedRoomPageState extends State<BedRoomPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildChartDHT(),
-              const SizedBox(height: 30),
-              _buildSensorLDR(),
-              const SizedBox(height: 30),
-              _buildAirCondition(),
-              const SizedBox(height: 30),
-              _buildLedAnalog(),
-            ],
-          ),
-        ),
-      ),
+      body: Builder(builder: (context) {
+        return BlocBuilder<BedRoomCubit, BedRoomState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildChartDHT(),
+                    const SizedBox(height: 30),
+                    _buildSensorLDR(),
+                    const SizedBox(height: 30),
+                    _buildAirCondition(state, context),
+                    const SizedBox(height: 30),
+                    _buildLedAnalog(state, context),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
   Widget _buildChartDHT() {
     return StreamBuilder(
-      stream: FirebaseDatabase.instance.ref('Sensor/DHT').onValue,
+      stream: FirebaseDatabase.instance.ref('Sensor/DHT11').onValue,
       builder: (context, snapshot) {
         if (snapshot.hasData && !snapshot.hasError && snapshot.data?.snapshot.value != null) {
           // print(snapshot.data?.snapshot.value.toString());
@@ -136,7 +140,7 @@ class _BedRoomPageState extends State<BedRoomPage> {
     );
   }
 
-  Widget _buildAirCondition() {
+  Widget _buildAirCondition(BedRoomState state, BuildContext context) {
     return Container(
       height: 80,
       width: double.infinity,
@@ -161,16 +165,18 @@ class _BedRoomPageState extends State<BedRoomPage> {
           ),
           Expanded(
             child: SwitchListTile(
-              title: Text(isSwitched ? 'ON' : 'OFF', style: const TextStyle(fontWeight: FontWeight.w500),),
-              value: isSwitched,
-              onChanged: (bool value) {
-                setState(() {
-                  isSwitched = value;
-                });
-              },
-              activeTrackColor: Colors.green, // Màu của track khi ON
-              activeColor: Colors.white, // Màu của thumb khi ON
-              inactiveTrackColor: Colors.red, // Màu của track khi OFF
+              title: Text(
+                state.isAirSwitched ? 'ON' : 'OFF',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+              value: state.isAirSwitched,
+              onChanged: (bool value) => context.read<BedRoomCubit>().setDataLedAirCondition(digitalAir: value),
+              activeTrackColor: Colors.green,
+              // Màu của track khi ON
+              activeColor: Colors.white,
+              // Màu của thumb khi ON
+              inactiveTrackColor: Colors.red,
+              // Màu của track khi OFF
               inactiveThumbColor: Colors.white, // Màu của thumb khi OFF
             ),
           ),
@@ -179,7 +185,7 @@ class _BedRoomPageState extends State<BedRoomPage> {
     );
   }
 
-  Widget _buildLedAnalog() {
+  Widget _buildLedAnalog(BedRoomState state, BuildContext context) {
     return Container(
       height: 150,
       width: double.infinity,
@@ -196,17 +202,19 @@ class _BedRoomPageState extends State<BedRoomPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Slider(
-            value: _currentValue, // Giá trị hiện tại của Slider
-            min: 0, // Giá trị nhỏ nhất
-            max: 100, // Giá trị lớn nhất
-            divisions: 100, // Chia thanh trượt thành 100 đơn vị
-            label: _currentValue.toInt().toString(), // Hiển thị giá trị khi kéo
-            onChanged: (double value) {
-              setState(() {
-                _currentValue = value; // Cập nhật giá trị khi kéo thanh trượt
-              });
-            },
-            activeColor: Colors.blue, // Màu thanh trượt đã kéo
+            value: state.currentValueAnalog,
+            // Giá trị hiện tại của Slider
+            min: 0,
+            // Giá trị nhỏ nhất
+            max: 100,
+            // Giá trị lớn nhất
+            divisions: 100,
+            // Chia thanh trượt thành 100 đơn vị
+            label: state.currentValueAnalog.toInt().toString(),
+            // Hiển thị giá trị khi kéo
+            onChanged: (double value) => context.read<BedRoomCubit>().setDataLedAnalog(analog: value),
+            activeColor: Colors.blue,
+            // Màu thanh trượt đã kéo
             inactiveColor: Colors.grey, // Màu thanh trượt chưa kéo
           ),
           const Text("Led Analog Control", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_iot/common/widgets/appbar/app_bar.dart';
+import 'package:smart_iot/domain/entities/led/RGB.dart';
 import 'package:smart_iot/presentation/living_room/bloc/set_led_living_cubit.dart';
 
 class LivingRoomPage extends StatelessWidget {
@@ -8,42 +9,37 @@ class LivingRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SetLedLivingCubit(),
-      child: Scaffold(
-        appBar: BasicAppBar(
-          backgroundColor: Colors.green.shade100,
-          title: const Text(
-            "Living Room",
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 25,
-              color: Colors.green,
-            ),
+    return Scaffold(
+      appBar: BasicAppBar(
+        backgroundColor: Colors.green.shade100,
+        title: const Text(
+          "Living Room",
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 25,
+            color: Colors.green,
           ),
         ),
-        body: Builder(
-          builder: (context) {
-            return BlocBuilder<SetLedLivingCubit, SetLedLivingState>(
-              builder: (context, state) {
-                return SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildLedDigital(state, context),
-                        const SizedBox(height: 30),
-                        _buildLedRGBControl(state, context),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        ),
       ),
+      body: Builder(builder: (context) {
+        return BlocBuilder<SetLedLivingCubit, SetLedLivingState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.only(top: 30, left: 16, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildLedDigital(state, context),
+                    const SizedBox(height: 30),
+                    _buildLedRGBControl(state, context),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
@@ -150,12 +146,20 @@ class LivingRoomPage extends StatelessWidget {
             max: 255,
             activeColor: Colors.blue,
             onChanged: (double value) => context.read<SetLedLivingCubit>().updateColors(blue: value),
-
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton(
               onPressed: () {
+                context.read<SetLedLivingCubit>().setDataLedRGB(
+                      rgb: RGBEntity(
+                        brightness: state.brightness,
+                        numbersLed: state.numbersLed,
+                        red: state.red,
+                        green: state.green,
+                        blue: state.blue,
+                      ),
+                    );
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),

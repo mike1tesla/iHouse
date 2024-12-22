@@ -17,6 +17,7 @@ import 'package:smart_iot/domain/usecase/led/setDataLedAnalog.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedDigital.dart';
 
 import 'domain/usecase/auth/signout.dart';
+import 'domain/usecase/led/setDataLedRGB.dart';
 import 'domain/usecase/mess/call_gemini_model.dart';
 
 final sl = GetIt.instance;
@@ -45,5 +46,6 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SetDataLedAirConditionUseCase>(SetDataLedAirConditionUseCase());
   sl.registerSingleton<SetDataLedAnalogUseCase>(SetDataLedAnalogUseCase());
   sl.registerSingleton<SetDataLedDigitalUseCase>(SetDataLedDigitalUseCase());
+  sl.registerSingleton<SetDataLedRGBUseCase>(SetDataLedRGBUseCase());
 
 }

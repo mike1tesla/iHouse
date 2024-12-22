@@ -4,6 +4,9 @@ import 'package:smart_iot/presentation/chatbox/pages/chatbox.dart';
 import 'package:smart_iot/presentation/history/pages/history.dart';
 import 'package:smart_iot/presentation/house/pages/house.dart';
 
+import '../../bed_room/bloc/bed_room_cubit.dart';
+import '../../living_room/bloc/set_led_living_cubit.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -13,12 +16,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
+
   // List of screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
     const HistoryPage(),
     const HousePage(),
     ChatBoxPage(),
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

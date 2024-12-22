@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_iot/domain/entities/led/RGB.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedDigital.dart';
+import 'package:smart_iot/domain/usecase/led/setDataLedRGB.dart';
 
 import '../../../service_locator.dart';
 
@@ -23,7 +25,22 @@ class SetLedLivingCubit extends Cubit<SetLedLivingState> {
       // Cập nhật trạng thái mới
       emit(state.copyWith(isSwitched: digital));
     } catch (e) {
-      // Xử lý lỗi nếu cần (ví dụ: log lỗi hoặc thông báo lỗi)
+      print('Error setting led digital: $e');
+    }
+  }
+
+  Future<void> setDataLedRGB({required RGBEntity rgb}) async {
+    try {
+      // Gọi use case để gửi dữ liệu
+      await sl<SetDataLedRGBUseCase>().call(params: rgb);
+      emit(state.copyWith(
+        brightness: rgb.brightness,
+        numbersLed: rgb.numbersLed,
+        red: rgb.red,
+        green: rgb.green,
+        blue: rgb.blue,
+      ));
+    } catch (e) {
       print('Error setting led digital: $e');
     }
   }

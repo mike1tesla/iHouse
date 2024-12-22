@@ -1,7 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_iot/data/models/lockdoor/lockdoor.dart';
@@ -40,7 +38,10 @@ class _HousePageState extends State<HousePage> {
               ),
             );
           },
-          icon: const Icon(Icons.person, size: 35,),
+          icon: const Icon(
+            Icons.person,
+            size: 35,
+          ),
         ),
         title: SvgPicture.asset(
           AppVectors.logo,
@@ -173,7 +174,9 @@ class _HousePageState extends State<HousePage> {
             title: "Living Room",
             icon: FontAwesomeIcons.couch,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LivingRoomPage(),));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const LivingRoomPage(),
+              ));
             },
           ),
         ),
@@ -183,8 +186,9 @@ class _HousePageState extends State<HousePage> {
             title: "Bed Room",
             icon: FontAwesomeIcons.bed,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BedRoomPage(),));
-
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const BedRoomPage(),
+              ));
             },
           ),
         ),
