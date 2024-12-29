@@ -12,6 +12,8 @@ abstract class LockdoorCloudFirestoreService {
   Future<void> saveLockdoors(List<LockdoorEntity> lockdoors);
 
   Future<List<LockdoorEntity>> getHistoryLockdoors();
+
+  Future<LockdoorEntity?> getLatestLockdoor();
 }
 
 class LockdoorCloudFirestoreServiceImpl extends LockdoorCloudFirestoreService {
@@ -21,7 +23,8 @@ class LockdoorCloudFirestoreServiceImpl extends LockdoorCloudFirestoreService {
   Future<List<LockdoorEntity>> fetchLockdoors() async {
     QuerySnapshot snapshot = await firestore.collection('lockdoor').get();
     return snapshot.docs.map((doc) {
-      return LockdoorModel.fromFirestore(doc.data() as Map<String, dynamic>);
+      print(doc.data());
+      return LockdoorModel.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
   }
 
@@ -43,5 +46,20 @@ class LockdoorCloudFirestoreServiceImpl extends LockdoorCloudFirestoreService {
       return jsonData.map((e) => LockdoorModel.fromJson(e)).toList();
     }
     return [];
+  }
+
+  @override
+  Future<LockdoorEntity?> getLatestLockdoor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString('historyLockdoor');
+    if (jsonString != null) {
+      List<dynamic> jsonData = jsonDecode(jsonString);
+      List<LockdoorModel> lockdoors = jsonData.map((e) => LockdoorModel.fromJson(e)).toList();
+
+      // Sắp xếp theo thời gian giảm dần và lấy phần tử đầu tiên
+      lockdoors.sort((a, b) => b.unlockTime.compareTo(a.unlockTime));
+      return lockdoors.isNotEmpty ? lockdoors.first : null;
+    }
+    return null;
   }
 }

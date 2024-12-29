@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:smart_iot/data/data_source/auth/auth_firebase_service.dart';
 import 'package:smart_iot/data/data_source/led/led_firebase_database_service.dart';
 import 'package:smart_iot/data/data_source/lockdoor/lockdoor_cloud_firestore_service.dart';
+import 'package:smart_iot/data/data_source/lockdoor/stream_lockdoor_cloud_service.dart';
 import 'package:smart_iot/data/data_source/mess/mess_gemini_service.dart';
 import 'package:smart_iot/data/repository/auth/auth_repo_impl.dart';
 import 'package:smart_iot/data/repository/led/led_repo_impl.dart';
@@ -17,10 +18,15 @@ import 'package:smart_iot/domain/usecase/auth/signup.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedAirCondition.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedAnalog.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedDigital.dart';
+import 'package:smart_iot/domain/usecase/lockdoor/fetchLockdoors.dart';
+import 'package:smart_iot/domain/usecase/lockdoor/getHistoryLockdoors.dart';
+import 'package:smart_iot/domain/usecase/lockdoor/saveLockdoors.dart';
+import 'package:smart_iot/domain/usecase/lockdoor/streamLockdoor.dart';
 
 import 'domain/repository/lockdoor/lockdoor.dart';
 import 'domain/usecase/auth/signout.dart';
 import 'domain/usecase/led/setDataLedRGB.dart';
+import 'domain/usecase/lockdoor/getLatestLockdoor.dart';
 import 'domain/usecase/mess/call_gemini_model.dart';
 
 final sl = GetIt.instance;
@@ -31,6 +37,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<MessageGeminiService>(MessageGeminiServiceImpl());
   sl.registerSingleton<LedFirebaseDatabaseService>(LedFirebaseDatabaseServiceImpl());
   sl.registerSingleton<LockdoorCloudFirestoreService>(LockdoorCloudFirestoreServiceImpl());
+  sl.registerSingleton<StreamLockdoorCloudService>(StreamLockdoorCloudServiceImpl());
+
   // repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<MessageRepository>(MessageRepositoryImpl());
@@ -51,5 +59,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SetDataLedAnalogUseCase>(SetDataLedAnalogUseCase());
   sl.registerSingleton<SetDataLedDigitalUseCase>(SetDataLedDigitalUseCase());
   sl.registerSingleton<SetDataLedRGBUseCase>(SetDataLedRGBUseCase());
+  //lockdoor
+  sl.registerSingleton<StreamLockdoorsUseCase>(StreamLockdoorsUseCase());
+  sl.registerSingleton<FetchLockdoorsUseCase>(FetchLockdoorsUseCase());
+  sl.registerSingleton<GetHistoryLockdoorsUseCase>(GetHistoryLockdoorsUseCase());
+  sl.registerSingleton<SaveLockdoorsUseCase>(SaveLockdoorsUseCase());
+  sl.registerSingleton<GetLatestLockdoorUseCase>(GetLatestLockdoorUseCase());
 
 }

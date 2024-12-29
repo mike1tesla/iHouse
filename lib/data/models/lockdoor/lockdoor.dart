@@ -9,9 +9,9 @@ class LockdoorModel extends LockdoorEntity {
 
   factory LockdoorModel.fromJson(Map<String, dynamic> json) {
     return LockdoorModel(
-      tags: json['tags'],
-      unlockTime: json['unlockTime'],
-      unlockState: json['unlockState'],
+      tags: json['tags'] ?? 'Unknown', // Giá trị mặc định nếu null
+      unlockTime: json['unlock_time'] ?? 'N/A', // Giá trị mặc định nếu null
+      unlockState: json['unlock_state'] ?? false, // Giá trị mặc định nếu null
     );
   }
 
@@ -21,9 +21,5 @@ class LockdoorModel extends LockdoorEntity {
       'unlockTime': unlockTime,
       'unlockState': unlockState,
     };
-  }
-
-  factory LockdoorModel.fromFirestore(Map<String, dynamic> data) {
-    return LockdoorModel.fromJson(data);
   }
 }

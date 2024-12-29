@@ -3,5 +3,5 @@ abstract class UseCase<Type, Params> {
 
   //Type: Method trả về generic class kiểu động
   //Params: kiểu dữ liệu của tham số mà usecase nhận vào
-  Future<Type> call({Params params});
+  Future<Type?> call({Params params});
 }

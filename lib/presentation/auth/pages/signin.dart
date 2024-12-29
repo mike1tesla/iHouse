@@ -67,7 +67,7 @@ class _SignInPageState extends State<SignInPage> {
                       },
                       (r) {
                         Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          MaterialPageRoute(builder: (context) => const MainPage()),
                           (route) => false,
                         );
                       },
