@@ -5,5 +5,4 @@ abstract class LockdoorRepository {
   Stream<Either<Exception, List<LockdoorEntity>>> streamLockdoor();
 
   Future<List<LockdoorEntity>> fetchLockdoors();
-  Future<LockdoorEntity?> getLatestLockdoor();
 }

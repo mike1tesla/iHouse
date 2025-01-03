@@ -16,9 +16,4 @@ class LockdoorRepositoryImpl extends LockdoorRepository {
   Future<List<LockdoorEntity>> fetchLockdoors() async {
     return await sl<LockdoorCloudFirestoreService>().fetchLockdoors();
   }
-
-  @override
-  Future<LockdoorEntity?> getLatestLockdoor() async {
-    return await sl<LockdoorCloudFirestoreService>().getLatestLockdoor();
-  }
 }

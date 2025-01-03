@@ -24,7 +24,6 @@ import 'package:smart_iot/domain/usecase/lockdoor/streamLockdoor.dart';
 import 'domain/repository/lockdoor/lockdoor.dart';
 import 'domain/usecase/auth/signout.dart';
 import 'domain/usecase/led/setDataLedRGB.dart';
-import 'domain/usecase/lockdoor/getLatestLockdoor.dart';
 import 'domain/usecase/mess/call_gemini_model.dart';
 
 final sl = GetIt.instance;
@@ -60,5 +59,4 @@ Future<void> initializeDependencies() async {
   //lockdoor
   sl.registerSingleton<StreamLockdoorsUseCase>(StreamLockdoorsUseCase());
   sl.registerSingleton<FetchLockdoorsUseCase>(FetchLockdoorsUseCase());
-  sl.registerSingleton<GetLatestLockdoorUseCase>(GetLatestLockdoorUseCase());
 }
