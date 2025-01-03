@@ -19,8 +19,6 @@ import 'package:smart_iot/domain/usecase/led/setDataLedAirCondition.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedAnalog.dart';
 import 'package:smart_iot/domain/usecase/led/setDataLedDigital.dart';
 import 'package:smart_iot/domain/usecase/lockdoor/fetchLockdoors.dart';
-import 'package:smart_iot/domain/usecase/lockdoor/getHistoryLockdoors.dart';
-import 'package:smart_iot/domain/usecase/lockdoor/saveLockdoors.dart';
 import 'package:smart_iot/domain/usecase/lockdoor/streamLockdoor.dart';
 
 import 'domain/repository/lockdoor/lockdoor.dart';
@@ -62,8 +60,5 @@ Future<void> initializeDependencies() async {
   //lockdoor
   sl.registerSingleton<StreamLockdoorsUseCase>(StreamLockdoorsUseCase());
   sl.registerSingleton<FetchLockdoorsUseCase>(FetchLockdoorsUseCase());
-  sl.registerSingleton<GetHistoryLockdoorsUseCase>(GetHistoryLockdoorsUseCase());
-  sl.registerSingleton<SaveLockdoorsUseCase>(SaveLockdoorsUseCase());
   sl.registerSingleton<GetLatestLockdoorUseCase>(GetLatestLockdoorUseCase());
-
 }

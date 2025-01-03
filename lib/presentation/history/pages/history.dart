@@ -47,7 +47,6 @@ class HistoryPage extends StatelessWidget {
 
   Widget buildHistory(LockdoorLoaded state) {
     final List<LockdoorEntity> listHistory = state.lockdoors;
-    print("build History: ${state.lockdoors}");
     return ListView.separated(
       itemCount: listHistory.length,
       itemBuilder: (context, index) {

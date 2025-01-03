@@ -9,10 +9,6 @@ import '../../models/lockdoor/lockdoor.dart';
 abstract class LockdoorCloudFirestoreService {
   Future<List<LockdoorEntity>> fetchLockdoors();
 
-  Future<void> saveLockdoors(List<LockdoorEntity> lockdoors);
-
-  Future<List<LockdoorEntity>> getHistoryLockdoors();
-
   Future<LockdoorEntity?> getLatestLockdoor();
 }
 
@@ -21,31 +17,10 @@ class LockdoorCloudFirestoreServiceImpl extends LockdoorCloudFirestoreService {
 
   @override
   Future<List<LockdoorEntity>> fetchLockdoors() async {
-    QuerySnapshot snapshot = await firestore.collection('lockdoor').get();
+    QuerySnapshot snapshot = await firestore.collection('lockdoor').orderBy('unlock_time', descending: true).get();
     return snapshot.docs.map((doc) {
-      print(doc.data());
       return LockdoorModel.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
-  }
-
-  @override
-  Future<void> saveLockdoors(List<LockdoorEntity> lockdoors) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String jsonString = jsonEncode(
-      lockdoors.map((e) => (e as LockdoorModel).toJson()).toList(),
-    );
-    await prefs.setString('historyLockdoor', jsonString);
-  }
-
-  @override
-  Future<List<LockdoorEntity>> getHistoryLockdoors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString('historyLockdoor');
-    if (jsonString != null) {
-      List<dynamic> jsonData = jsonDecode(jsonString);
-      return jsonData.map((e) => LockdoorModel.fromJson(e)).toList();
-    }
-    return [];
   }
 
   @override
@@ -55,9 +30,6 @@ class LockdoorCloudFirestoreServiceImpl extends LockdoorCloudFirestoreService {
     if (jsonString != null) {
       List<dynamic> jsonData = jsonDecode(jsonString);
       List<LockdoorModel> lockdoors = jsonData.map((e) => LockdoorModel.fromJson(e)).toList();
-
-      // Sắp xếp theo thời gian giảm dần và lấy phần tử đầu tiên
-      lockdoors.sort((a, b) => b.unlockTime.compareTo(a.unlockTime));
       return lockdoors.isNotEmpty ? lockdoors.first : null;
     }
     return null;

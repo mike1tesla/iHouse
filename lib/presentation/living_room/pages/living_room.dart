@@ -140,7 +140,7 @@ class LivingRoomPage extends StatelessWidget {
             onChanged: (double value) => context.read<SetLedLivingCubit>().updateColors(green: value),
           ),
           setupValueSlider(
-            title: "Red Color",
+            title: "Blue Color",
             currentValue: state.blue,
             divisions: 255,
             max: 255,

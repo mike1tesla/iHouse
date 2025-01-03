@@ -6,9 +6,9 @@ import 'package:smart_iot/domain/usecase/lockdoor/streamLockdoor.dart';
 import '../../../service_locator.dart';
 
 
-class StreamHistoryCubit extends Cubit<Either<Exception, List<LockdoorEntity>>> {
+class StreamLockdoorCubit extends Cubit<Either<Exception, List<LockdoorEntity>>> {
 
-  StreamHistoryCubit() : super(const Right([])) {
+  StreamLockdoorCubit() : super(const Right([])) {
     _loadData();
   }
 
