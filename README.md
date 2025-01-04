@@ -15,7 +15,11 @@ The IoT system of the project is designed based on three main components:
 - Hardware: ESP32
 
 The main technologies used in this project include:
+- State Management: Bloc/Cubit with Clean Architecture
 - Firebase: Realtime Database, Cloud Firestore, FCM, Authentication, etc.
 - Integration with the Gemini API.
 - Hardware: ESP32 along with electronic devices and IoT sensors.
+
+UseCase Diagram:
+![img_2.png](img_2.png)
 
