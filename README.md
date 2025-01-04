@@ -7,13 +7,15 @@ updates, remote control, and automation for a smarter living experience.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+![img_1.png](img_1.png)
 
-A few resources to get you started if this is your first Flutter project:
+The IoT system of the project is designed based on three main components:
+- Front-end: Flutter
+- Back-end: Firebase
+- Hardware: ESP32
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The main technologies used in this project include:
+- Firebase: Realtime Database, Cloud Firestore, FCM, Authentication, etc.
+- Integration with the Gemini API.
+- Hardware: ESP32 along with electronic devices and IoT sensors.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
