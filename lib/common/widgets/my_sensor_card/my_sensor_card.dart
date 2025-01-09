@@ -26,8 +26,8 @@ class MySensorCard extends StatelessWidget {
       margin: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          colors: [Colors.green, Colors.white],
+        gradient: LinearGradient(
+          colors: [Colors.green, Colors.grey.shade300],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

@@ -32,6 +32,13 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   chart_sparkline: ^1.1.1
   firebase_database: ^11.1.1
+  flutter_native_splash: ^2.4.0
+
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "#C8E6C9"
+  image: "assets/images/iHouse.png"
 
 dev_dependencies:
   flutter_test:

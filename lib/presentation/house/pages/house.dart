@@ -139,7 +139,7 @@ class _HousePageState extends State<HousePage> {
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Colors.green,));
         }
 
         final docs = snapshot.data!.docs;
@@ -267,8 +267,8 @@ class _HousePageState extends State<HousePage> {
       padding: const EdgeInsets.all(16),
       height: 160,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Colors.green, Colors.grey], // Danh sách màu
+        gradient: LinearGradient(
+          colors: [Colors.green, Colors.grey.shade400], // Danh sách màu
           begin: Alignment.topLeft, // Điểm bắt đầu gradient
           end: Alignment.bottomRight, // Điểm kết thúc gradient
         ),

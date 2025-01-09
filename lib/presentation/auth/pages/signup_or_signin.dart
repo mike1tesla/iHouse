@@ -31,13 +31,9 @@ class SignupOrSignInPage extends StatelessWidget {
           //   child: Image.asset(AppImages.authBG,  width: 200,),
           // ),
           Positioned(
-            bottom: MediaQuery.of(context).size.height / 2.5, // Đặt ở dưới cùng
-            left: 0,
-            right: 0,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(AppVectors.logo),
