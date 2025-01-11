@@ -1,6 +1,6 @@
 # iHouse
 
-iHouse: A smart home management app that enables users to control and monitor IoT devices
+iHouse: Asmart home management app that enables users to control and monitor IoT devices
 seamlessly.
 With an intuitive interface and robust backend, iHouse offers features like real-time device status
 updates, remote control, and automation for a smarter living experience.
